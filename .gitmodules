@@ -1,3 +1,6 @@
 [submodule "ansible/roles/golang"]
 	path = ansible/roles/golang
 	url = https://github.com/jlund/ansible-go.git
+[submodule "ansible/roles/rabbitmq"]
+	path = ansible/roles/rabbitmq
+	url = https://github.com/michaelrigart/ansible-role-rabbitmq.git

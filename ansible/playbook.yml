@@ -6,6 +6,8 @@
   roles:
     - server
     - vagrant_local
+    - golang
+    - rabbitmq
     - php
     - xdebug
     - composer
