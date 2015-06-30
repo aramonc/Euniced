@@ -1,0 +1,3 @@
+[submodule "ansible/roles/golang"]
+	path = ansible/roles/golang
+	url = https://github.com/jlund/ansible-go.git
