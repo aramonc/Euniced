@@ -4,3 +4,6 @@
 [submodule "ansible/roles/rabbitmq"]
 	path = ansible/roles/rabbitmq
 	url = https://github.com/michaelrigart/ansible-role-rabbitmq.git
+[submodule "ansible/roles/git"]
+	path = ansible/roles/git
+	url = git@github.com:geerlingguy/ansible-role-git.git

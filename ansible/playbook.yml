@@ -6,6 +6,7 @@
   roles:
     - server
     - vagrant_local
+    - git
     - golang
     - rabbitmq
     - php
