@@ -11,8 +11,16 @@ type RabbitConfig struct {
 	Exchange string
 }
 
+type Worker struct {
+	Command string
+	Arguments []string
+	Max int
+	Min int
+	Logpath string
+}
+
 type Config struct {
-	Process string
+	Workers []Worker
 	Rabbit RabbitConfig
 }
 

@@ -2,10 +2,14 @@ package main
 
 import "os"
 import "os/signal"
+import "os/exec"
 import "syscall"
 import "flag"
 import "fmt"
+// import "log"
 import "github.com/aramonc/config"
+import "strings"
+import "bufio"
 
 // Define channels
 var done = make(chan bool)
@@ -33,7 +37,9 @@ func main() {
 
 func initialize(c <-chan config.Config) {
 	conf := <-c
-	fmt.Println(conf.Rabbit.Host)
+	for _,procConf := range conf.Workers {
+		bootWorker(procConf);
+	}
 }
 
 func sigHandler(signals <-chan os.Signal) {
@@ -41,4 +47,36 @@ func sigHandler(signals <-chan os.Signal) {
 	if sig.String() == "interrupt" || sig.String() == "terminated" || sig.String() == "Killed" {
 		done <- true
 	}
+}
+
+func bootWorker(workerConf config.Worker) {
+	cmd := make([]*exec.Cmd, workerConf.Max, workerConf.Max)
+	for i := 0; i < workerConf.Max; i++ {
+		cmd[i] = exec.Command(workerConf.Command, strings.Join(workerConf.Arguments, " "))
+		attachToLog(cmd[i]);
+	}
+	
+
+	for j := 0; j < workerConf.Max; j++ {
+		err := cmd[j].Start()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error starting Cmd", err)
+			os.Exit(1)
+		}
+	}
+}
+
+func attachToLog(cmd *exec.Cmd) {
+	reader, err := cmd.StdoutPipe()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error creating StdoutPipe for Cmd", err)
+		os.Exit(1)
+	}
+
+	scanner := bufio.NewScanner(reader)
+	go func() {
+		for scanner.Scan() {
+			fmt.Printf("Running Logger | %s\n", scanner.Text())
+		}
+	}()
 }
