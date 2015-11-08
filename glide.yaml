@@ -1,0 +1,3 @@
+package: github.com/aramonc/euniced
+import:
+  - package: gopkg.in/yaml.v2

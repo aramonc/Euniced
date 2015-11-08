@@ -6,8 +6,9 @@ import "os/exec"
 import "syscall"
 import "flag"
 import "fmt"
+
 // import "log"
-import "github.com/aramonc/config"
+import "github.com/aramonc/euniced/config"
 import "strings"
 import "bufio"
 
@@ -37,8 +38,8 @@ func main() {
 
 func initialize(c <-chan config.Config) {
 	conf := <-c
-	for _,procConf := range conf.Workers {
-		bootWorker(procConf);
+	for _, procConf := range conf.Workers {
+		bootWorker(procConf)
 	}
 }
 
@@ -53,9 +54,8 @@ func bootWorker(workerConf config.Worker) {
 	cmd := make([]*exec.Cmd, workerConf.Max, workerConf.Max)
 	for i := 0; i < workerConf.Max; i++ {
 		cmd[i] = exec.Command(workerConf.Command, strings.Join(workerConf.Arguments, " "))
-		attachToLog(cmd[i]);
+		attachToLog(cmd[i])
 	}
-	
 
 	for j := 0; j < workerConf.Max; j++ {
 		err := cmd[j].Start()
